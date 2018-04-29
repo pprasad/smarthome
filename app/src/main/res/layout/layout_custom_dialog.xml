@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="276dp"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/textView6"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="17dp"
+            android:text="@string/device_label_name"
+            android:textSize="@dimen/_18sp" />
+
+        <Spinner
+            android:id="@+id/spinner_device_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_below="@+id/textView5"
+            android:theme="@android:style/Theme.Holo.Light.DarkActionBar" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/spinner_device_name"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/alias_device_name"
+            android:textSize="@dimen/_18sp" />
+
+        <EditText
+            android:id="@+id/device_ailas_name_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/spinner_device_name"
+            android:layout_below="@+id/textView6"
+            android:layout_marginTop="13dp"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/device_ailas_name_txt"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:text="@string/config_device_name"
+            android:textSize="@dimen/_18sp" />
+
+        <CheckBox
+            android:id="@+id/manual_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/device_ailas_name_txt"
+            android:layout_below="@+id/textView7"
+            android:layout_marginTop="15dp"
+            android:text="@string/manual_label_name"
+            android:textSize="@dimen/_15dp" />
+
+        <CheckBox
+            android:id="@+id/auto_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/manual_type"
+            android:layout_alignBottom="@+id/manual_type"
+            android:layout_toEndOf="@+id/textView6"
+            android:text="@string/auto_label_name"
+            android:textSize="@dimen/_15dp" />
+    </RelativeLayout>
+</LinearLayout>

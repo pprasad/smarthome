@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/_5dp"
+    android:orientation="vertical">
+
+    <ImageButton
+        android:id="@+id/time_dialog_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_lock_idle_alarm" />
+
+    <TextView
+        android:id="@+id/split_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2dp"
+        android:layout_marginTop="@dimen/_8dp"
+        android:background="@color/colorLoginwin" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/scheduler_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="430dp"></android.support.v7.widget.RecyclerView>
+</LinearLayout>

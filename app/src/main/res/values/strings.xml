@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">HomeApplication</string>
+    <string name="logo_name">HomeApplication</string>
+    <string name="app_welcome_name">Welcome to HomeApplication</string>
+    <string name="title_home">Home</string>
+    <string name="title_timer_config">Time Configuration</string>
+    <string name="title_device_config">Control Panel</string>
+    <string name="wifi_name">Wifi User</string>
+    <string name="wifi_pwd">Password</string>
+    <string name="wifi_ip">IP Address</string>
+    <string name="header_name">Csoft</string>
+    <string name="header_email_name">pprasad.java@gmail.com</string>
+    <string name="title_scheduler_name">Scheduler Configuration</string>
+    <string name="msg_progress_bar">Please Wait Data in Process...</string>
+    <string name="sucess_mg">Successfully Done</string>
+    <string name="mandatory_msg">Location&amp;Ip Address is Mandatory</string>
+    <!--Error Messsages-->
+    <string name="wifi_error_msg">Wifi is not enabled</string>
+    <string name="wifi_connection_failure">Connection Failure</string>
+    <string name="device_error_msg">Device already Configured</string>
+    <string name="device_communication_msg">Device Communication Error</string>
+    <!--Messages-->
+    <string name="time_success_msg">Date&amp;Time Successfully Updated</string>
+    <!--Button-->
+    <string name="login_label_button">Login</string>
+    <string name="title_activity_main">Welcome</string>
+    <string name="btn_label_save">Save</string>
+    <string name="btn_label_show">Show</string>
+    <string name="btn_label_wifi_status">Verify</string>
+    <string name="btn_label_connect">Connect</string>
+    <string name="btn_label_update">Update</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <!--Slider Menu-->
+    <string name="time_setting_label">Time</string>
+    <string name="date_time_label">Date</string>
+    <string name="time_label">Time</string>
+
+    <!--Configration-->
+    <string name="device_label_name">Device Name</string>
+    <string name="alias_device_name">Assign Name</string>
+    <string name="config_device_name">Configuration Type?</string>
+    <string name="manual_label_name">Manual</string>
+    <string name="auto_label_name">Auto</string>
+    <string name="device_info_label">Device Location Information</string>
+    <string name="location_label_name">Location</string>
+    <string name="device_system_datetime">DateTime Settings</string>
+    <string name="time_start_label">Start Time</string>
+    <string name="time_end_label">End Time</string>
+</resources>

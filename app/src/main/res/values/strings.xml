@@ -45,9 +45,12 @@
     <string name="config_device_name">Configuration Type?</string>
     <string name="manual_label_name">Manual</string>
     <string name="auto_label_name">Auto</string>
-    <string name="device_info_label">Device Location Information</string>
+    <string name="device_info_label">Location Configuration</string>
     <string name="location_label_name">Location</string>
     <string name="device_system_datetime">DateTime Settings</string>
     <string name="time_start_label">Start Time</string>
     <string name="time_end_label">End Time</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="wifi_header_title">Wifi</string>
 </resources>

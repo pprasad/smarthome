@@ -31,6 +31,8 @@ public class RestClient {
 
     private final String BASE_URL = "http://";
 
+    private final Integer PORT=81;
+
     private final String CONTENT_TYPE = "application/json";
 
     private RestClient() {
@@ -87,6 +89,6 @@ public class RestClient {
     }
 
     private String getAbsoluteUrl(String relativeUrl) {
-        return BASE_URL.concat(ipAddress).concat(relativeUrl);
+        return BASE_URL.concat(ipAddress).concat(":").concat(PORT.toString()).concat(relativeUrl);
     }
 }

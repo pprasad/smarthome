@@ -28,6 +28,7 @@ import com.loopj.android.http.RequestParams;
 import com.smart.csoft.dto.Device;
 import com.smart.csoft.fragement.ConfigrationFragment;
 import com.smart.csoft.fragement.HomeFragment;
+import com.smart.csoft.fragement.WifiConfigFragment;
 import com.smart.csoft.services.DateTimeDialog;
 import com.smart.csoft.services.RestClient;
 import com.smart.csoft.services.SmartHomeUtils;
@@ -104,7 +105,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             fragment = new HomeFragment();
-        } else if (id == R.id.nav_config) {
+        }else if(id == R.id.wifi_config){
+            fragment=new WifiConfigFragment();
+        }else if (id == R.id.nav_config) {
             fragment = new ConfigrationFragment();
         } else if (id == R.id.nav_logout) {
             smartService.logOut();

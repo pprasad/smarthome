@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragement.WifiConfigFragment">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/_8dp">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/wifi_ssid_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Network Name(Wifi SSID)" />
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/wifi_pwd_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Wifi Password"
+                android:inputType="textVisiblePassword"
+                android:password="true"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/wifi_ip_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="IP Address(Ex:- 192.168.0.1)"
+                android:editable="false"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/wifi_mac_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Device Mac"
+                android:editable="false"/>
+        </android.support.design.widget.TextInputLayout>
+        <Button
+            android:id="@+id/save_wifi_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

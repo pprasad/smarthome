@@ -43,9 +43,19 @@
                 android:id="@+id/toggleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/textView4"
-                android:layout_marginEnd="22dp" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="5dp" />
+
+            <ImageButton
+                android:id="@+id/remove_device"
+                android:layout_width="71dp"
+                android:layout_height="49dp"
+                android:layout_alignStart="@id/toggleButton"
+                android:layout_alignTop="@id/toggleButton"
+                android:scaleType="fitCenter"
+                card_view:srcCompat="@drawable/icon_trash_24" />
 
             <ImageButton
                 android:id="@+id/parent_list_item_expand_arrow"

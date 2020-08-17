@@ -1,6 +1,7 @@
 package com.smart.csoft.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loopj.android.http.ResponseHandlerInterface;
+import com.smart.csoft.MainActivity;
 import com.smart.csoft.R;
 import com.smart.csoft.dto.WifiDevice;
 import com.smart.csoft.services.AsyncSmartHandler;
@@ -78,6 +80,7 @@ public class WifiViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 smartService.show(context);
+                /*smartService.show(context);
                 smartService.setNetWorkId(wifiDevice.getSSID());
                 disablewifi(wifiDevice.getNetWorkId(),wifiDevice);
                 smartService.getWifiManager().enableNetwork(wifiDevice.getNetWorkId(), true);
@@ -103,7 +106,13 @@ public class WifiViewAdapter extends BaseAdapter {
                         count+=1;
                     }
                 };
-                handler.postDelayed(checkNetwork,1000);
+                handler.postDelayed(checkNetwork,1000);*/
+                //smartService.show(context);
+                smartService.setSsid(wifiDevice.getSSID());
+                restClient.setIpAddress(wifiDevice.getIpAddress());
+                restClient.getCall(SmartHomeUtils.URL_VERIFY,handlerInterface);
+                //Intent intent = new Intent(context,MainActivity.class);
+                //context.startActivity(intent);
             }
         });
         wifiSettings.setOnClickListener(new View.OnClickListener() {

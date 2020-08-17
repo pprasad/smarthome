@@ -45,6 +45,10 @@ public class SmartDatabaseHelper extends SQLiteOpenHelper {
         return WifiTable.update(wifiDevice, this.getWritableDatabase());
     }
 
+    public Integer updateWifiDevice(String ssid,String ip) {
+        return WifiTable.update(ssid,ip,this.getWritableDatabase());
+    }
+
     public Integer deleteWifiDevice(WifiDevice wifiDevice) {
         return WifiTable.delete(wifiDevice, this.getWritableDatabase());
     }

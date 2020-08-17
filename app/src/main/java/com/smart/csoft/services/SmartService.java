@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -41,6 +42,9 @@ public class SmartService {
     private String netWorkId;
     private boolean isAutoClose=true;
     private int wifiIndex=-1;
+    private String ssid;
+    private Handler handler;
+    private Runnable runnable;
 
     private SmartService() {
     }
@@ -107,26 +111,34 @@ public class SmartService {
     public void addViewDevice(Device device) {
         if (this.viewDeviceList == null) {
             this.viewDeviceList = new ArrayList<>();
+        }else if(!this.viewDeviceList.contains(device)) {
+            this.viewDeviceList.add(device);
         }
-        this.viewDeviceList.add(device);
     }
 
     public String getProperty(Integer id) {
-        return this.context.getResources().getString(id);
+        String resoureId=null;
+        if(this.context!=null && this.context.getResources()!=null){
+            resoureId=this.context.getResources().getString(id);
+        }
+        return resoureId;
     }
 
     public void show(Context context) {
-        progressBar = new ProgressDialog(context);
-        progressBar.setMessage(this.getProperty(R.string.msg_progress_bar));
-        progressBar.setCancelable(false);
-        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressBar.show();
+        if(progressBar==null) {
+            progressBar = new ProgressDialog(context);
+            progressBar.setMessage(this.getProperty(R.string.msg_progress_bar));
+            progressBar.setCancelable(false);
+            progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressBar.show();
+        }
     }
 
     public void close() {
         Log.i("SmartServices","Progress "+progressBar);
-        if(progressBar!=null) {
-            progressBar.dismiss();
+        if(progressBar!=null &&  progressBar.isShowing()) {
+             progressBar.dismiss();
+             this.progressBar=null;
         }
     }
 
@@ -141,11 +153,12 @@ public class SmartService {
         return dialogBuilder.create();
     }
     public void logOut(){
-        _INSTACE=null;
+         _INSTACE=null;
         devices=null;
         viewDeviceList=null;
         context=null;
         fragmentManager=null;
+        this.close();
     }
 
     public String getNetWorkId() {
@@ -190,5 +203,18 @@ public class SmartService {
         if(this.progressBar!=null){
             this.progressBar.setMessage(message);
         }
+    }
+
+    public String getSsid() {
+        return ssid;
+    }
+
+    public void setSsid(String ssid) {
+        this.ssid = ssid;
+    }
+
+    public void setHandler(Handler handler,Runnable runnable){
+        this.handler=handler;
+        this.runnable=runnable;
     }
 }

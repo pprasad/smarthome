@@ -30,6 +30,7 @@ import com.smart.csoft.services.RestClient;
 import com.smart.csoft.services.SmartHomeUtils;
 import com.smart.csoft.services.SmartService;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -52,10 +53,14 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
     private final AlertDialog alertDialog;
     private final String TAG = "DevicesViewAdapter";
     private Integer position;
+    private boolean isOnAndOff=false;
+    private boolean isRemove=false;
 
-    public DevicesViewAdapter(List<Device> devices, Context context) {
+    public DevicesViewAdapter(List<Device> devices, Context context,boolean isOnAndOff,boolean isRemove) {
         this.devices = devices;
         this.context = context;
+        this.isOnAndOff=isOnAndOff;
+        this.isRemove=isRemove;
         this.layoutInflater = LayoutInflater.from(context);
         dialogPromptView = this.layoutInflater.inflate(R.layout.dialog_alarm_prompt, null);
         startTimeText = dialogPromptView.findViewById(R.id.time_start_Txt);
@@ -75,70 +80,100 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
     public void onBindViewHolder(final DevicesViewHolder holder, final int position) {
         final Device device = devices.get(position);
         holder.deviceLabel.setText(device.getLocation());
-        final SchedulerViewAdapter schedulerViewAdapter = new SchedulerViewAdapter(device.getSchedulers(), context);
-        holder.recyclerView.setAdapter(schedulerViewAdapter);
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        holder.recyclerView.setHasFixedSize(true);
-        holder.recyclerView.setVerticalScrollBarEnabled(true);
-        if (device.getStatus().intValue() == 0) {
-            holder.toggleButton.setChecked(false);
-        } else {
-            holder.toggleButton.setChecked(true);
-        }
-        holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean flag) {
-                final boolean isFlag = flag;
-                RequestParams params = new RequestParams();
-                params.put("state", flag);
-                params.put("pinmode", device.getDeviceMode());
-                smartService.show(context);
-                restClient.getCall(SmartHomeUtils.MANUAL_CONFIG, params, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        Log.i(TAG,"schedule status"+statusCode);
-                        device.setStatus(isFlag ? 1 : 0);
-                        smartService.close();
-                    }
+        holder.imageButton.setVisibility(isOnAndOff?View.VISIBLE:View.INVISIBLE);
+        holder.toggleButton.setVisibility(isOnAndOff?View.VISIBLE:View.INVISIBLE);
+        holder.removeButton.setVisibility(isRemove?View.VISIBLE:View.INVISIBLE);
+        if(isOnAndOff){
+            final SchedulerViewAdapter schedulerViewAdapter = new SchedulerViewAdapter(device.getSchedulers(), context);
+            holder.recyclerView.setAdapter(schedulerViewAdapter);
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            holder.recyclerView.setHasFixedSize(true);
+            holder.recyclerView.setVerticalScrollBarEnabled(true);
+            getPinModeStatus(device,holder);
+            holder.toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton,final boolean flag) {
+                    RequestParams params = new RequestParams();
+                    Log.i("Device Mode",device.getDeviceMode().toString());
+                    Log.i("Device State","falg{}::"+flag);
+                    params.put("state",flag?0:1);
+                    params.put("pinmode", device.getDeviceMode());
+                    smartService.show(context);
+                    restClient.getCall(SmartHomeUtils.MANUAL_CONFIG, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            Log.i(TAG, "schedule status" + new String(responseBody));
+                            device.setStatus(flag?1:0);
+                            smartService.close();
+                        }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        Log.e(TAG,"schedule error msg",error);
-                        device.setStatus(0);
-                        holder.toggleButton.setChecked(false);
-                        smartService.close();
-                        smartService.showMessage(smartService.getProperty(R.string.device_communication_msg));
-                    }
-                });
-            }
-        });
-        holder.imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!holder.isOpen) {
-                    if (device.getSchedulers().isEmpty()) {
-                        getData(device, schedulerViewAdapter);
-                    }
-                    holder.includeView.setVisibility(View.VISIBLE);
-                    init(position, schedulerViewAdapter);
-                    holder.isOpen = true;
-                } else {
-                    holder.includeView.setVisibility(View.GONE);
-                    holder.isOpen = false;
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.e(TAG, "schedule error msg", error);
+                            device.setStatus(0);
+                            holder.toggleButton.setChecked(false);
+                            smartService.close();
+                            smartService.showMessage(smartService.getProperty(R.string.device_communication_msg));
+                        }
+                    });
                 }
-            }
-        });
-        holder.timeDialogBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.show();
-            }
-        });
+            });
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!holder.isOpen) {
+                        if (device.getSchedulers().isEmpty()) {
+                            getData(device, schedulerViewAdapter);
+                        }
+                        holder.includeView.setVisibility(View.VISIBLE);
+                        init(position, schedulerViewAdapter);
+                        holder.isOpen = true;
+                    } else {
+                        holder.includeView.setVisibility(View.GONE);
+                        holder.isOpen = false;
+                    }
+                }
+            });
+            holder.timeDialogBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    alertDialog.show();
+                }
+            });
+        }else{
+            final RequestParams params=new RequestParams();
+            params.put("configType","device");
+            params.put("deviceId",device.getDeviceMode());
+            holder.removeButton.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    smartService.show(v.getContext());
+                    restClient.getCall(SmartHomeUtils.REMOVE_DEVICE, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                             String response=new String(responseBody);
+                             smartService.close();
+                             smartService.showMessage(response);
+                             devices.remove(device);
+                             notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            smartService.close();
+                            smartService.showMessage("Communication Error");
+                        }
+                    });
+                }
+            });
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return devices.size();
+        return devices!=null?devices.size():0;
     }
 
     public void init(final int position, final SchedulerViewAdapter schedulerViewAdapter) {
@@ -203,7 +238,7 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
         RequestParams params = new RequestParams();
         params.put("scheduler", request);
         if (!device.getSchedulers().contains(scheduler)) {
-            restClient.getCall(SmartHomeUtils.CREATE_SCHEDULER, params, new AsyncHttpResponseHandler() {
+            restClient.postJsonCall(context,SmartHomeUtils.CREATE_SCHEDULER,request, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     device.addscheduler(scheduler);
@@ -253,13 +288,42 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
         });
     }
 
+    private void getPinModeStatus(final Device device,final DevicesViewHolder holder){
+        RequestParams params=new RequestParams();
+        params.put("pinmode",device.getDeviceMode());
+    /*    if (device.getStatus() != null && device.getStatus().intValue() == 0) {
+            holder.toggleButton.setChecked(false);
+        } else {
+            holder.toggleButton.setChecked(true);
+        }
+    */    restClient.getCall(SmartHomeUtils.PINMODE_STATUS, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.i(TAG, "schedule status" + new String(responseBody));
+                String flag=new String(responseBody);
+                device.setStatus("false".equals(flag)?1:0);
+                holder.toggleButton.setChecked("false".equals(flag)?true:false);
+                smartService.close();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.e(TAG, "schedule error msg", error);
+                device.setStatus(0);
+                holder.toggleButton.setChecked(false);
+                smartService.close();
+                smartService.showMessage(smartService.getProperty(R.string.device_communication_msg));
+            }
+        });
+    }
+
     public class DevicesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView deviceLabel;
         private ToggleButton toggleButton;
         private RelativeLayout viewDeviceLayout;
         private View includeView;
-        private ImageButton imageButton, timeDialogBtn;
+        private ImageButton imageButton, timeDialogBtn,removeButton;
         private Boolean isOpen = false;
         private RecyclerView recyclerView;
 
@@ -272,6 +336,7 @@ public class DevicesViewAdapter extends RecyclerView.Adapter<DevicesViewAdapter.
             imageButton = itemView.findViewById(R.id.parent_list_item_expand_arrow);
             timeDialogBtn = includeView.findViewById(R.id.time_dialog_btn);
             recyclerView = includeView.findViewById(R.id.scheduler_recycle_view);
+            removeButton=itemView.findViewById(R.id.remove_device);
         }
     }
 }

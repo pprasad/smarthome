@@ -1,9 +1,12 @@
 package com.smart.csoft.fragement;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.smart.csoft.R;
+import com.smart.csoft.adapters.DevicesViewAdapter;
 import com.smart.csoft.dto.Device;
 import com.smart.csoft.services.RestClient;
 import com.smart.csoft.services.SmartHomeUtils;
@@ -41,6 +45,8 @@ public class HomeFragment extends Fragment {
 
     private final Handler handler = new Handler();
 
+    private RecyclerView recyclerView;
+
     private TextView deviceDateTime = null;
 
     @Override
@@ -59,6 +65,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         deviceDateTime = view.findViewById(R.id.device_datetime);
+        recyclerView=(RecyclerView)view.findViewById(R.id.device_information);
         loadDevices();
     }
 
@@ -66,12 +73,13 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         handler.postDelayed(sendUpdatesToUI, 1000);
+        smartService.setHandler(handler,sendUpdatesToUI);
+
     }
     public void loadDevices(){
-        if (smartService.getDevices() == null) {
+        if (smartService.getDevices() == null){
             smartService.show(getContext());
             smartService.setProgressBar("Fetching Devices");
-            RequestParams params = new RequestParams();
             restClient.getJsonCall(SmartHomeUtils.DEVICE_INFO, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -92,7 +100,38 @@ public class HomeFragment extends Fragment {
                     smartService.close();
                 }
             });
-        }
+         }
+        loadDeviceInfromation();
+    }
+    private void loadDeviceInfromation(){
+        final Context parent=getContext();
+        smartService.show(parent);
+        smartService.setProgressBar("Please wait fetching Device Information");
+        RequestParams params = new RequestParams();
+        params.put("isExisting","true");
+        restClient.getJsonCall(SmartHomeUtils.DEVICE_INFO,params,new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Log.i(TAG,"Configuration List"+response.get("devices").toString());
+                    Gson gson = new Gson();
+                    List<Device> devices = gson.fromJson(response.get("devices").toString(), new TypeToken<List<Device>>() {
+                    }.getType());
+                    //smartService.setDevices(devices);
+                    DevicesViewAdapter viewAdapter=new DevicesViewAdapter(devices,parent,true,false);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(parent));
+                    recyclerView.setAdapter(viewAdapter);
+                    smartService.close();
+                 }catch (Exception ex) {
+                    Log.e(TAG,"Device Configuration Error", ex);
+                }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i(TAG,throwable.getMessage());
+                smartService.close();
+            }
+        });
     }
     private Runnable sendUpdatesToUI = new Runnable() {
         public void run() {
@@ -107,10 +146,16 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                    //handler.removeCallbacks(sendUpdatesToUI);
                 }
             });
             handler.postDelayed(this, 5000);
         }
     };
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.handler.removeCallbacks(sendUpdatesToUI);
+    }
 }

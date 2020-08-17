@@ -9,6 +9,10 @@
             android:icon="@android:drawable/ic_dialog_info"
             android:title="Home" />
         <item
+            android:id="@+id/wifi_config"
+            android:icon="@drawable/icons_home"
+            android:title="WifiSettings" />
+        <item
             android:id="@+id/nav_config"
             android:icon="@drawable/icons_home"
             android:title="Configration" />

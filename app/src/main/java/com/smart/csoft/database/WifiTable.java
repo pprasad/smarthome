@@ -70,6 +70,12 @@ public class WifiTable {
         return database.update(TABLE_NAME, values, COLUMN_ID + " = ?",
                 new String[]{wifiDevice.getSSID()});
     }
+    public static Integer update(String ssid,String ip, SQLiteDatabase database) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IP,ip);
+        return database.update(TABLE_NAME, values, COLUMN_ID + " = ?",
+                new String[]{ssid});
+    }
 
     public static Integer delete(WifiDevice wifiDevice, SQLiteDatabase database) {
         return database.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[]{wifiDevice.getSSID()});

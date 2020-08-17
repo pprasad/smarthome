@@ -146,7 +146,7 @@ public class SchedulerFragment extends Fragment {
                         RequestParams params = new RequestParams();
                         params.put("scheduler", request);
                         if (!adapterSchedulers.contains(scheduler)) {
-                            restClient.getCall(SmartHomeUtils.CREATE_SCHEDULER, params, new AsyncHttpResponseHandler() {
+                            restClient.postJsonCall(view.getContext(),SmartHomeUtils.CREATE_SCHEDULER,request,new AsyncHttpResponseHandler() {
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                     device.addscheduler(scheduler);

@@ -81,7 +81,7 @@ public class ConfigrationFragment extends Fragment {
         isManual = dialogLayout.findViewById(R.id.manual_type);
         /*View Adapterholders*/
         viewDevices = smartService.getViewDeviceList();
-        devicesViewAdapter = new DevicesViewAdapter(viewDevices, view.getContext());
+        devicesViewAdapter = new DevicesViewAdapter(viewDevices, view.getContext(),false,true);
         recyclerView.setAdapter(devicesViewAdapter);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getContext());
@@ -120,7 +120,8 @@ public class ConfigrationFragment extends Fragment {
                             } else {
                                 RequestParams params = new RequestParams();
                                 params.put("device", new Gson().toJson(device));
-                                restClient.getCall(SmartHomeUtils.DEVICE_INFO, params, handler);
+                                //restClient.getCall(SmartHomeUtils.DEVICE_INFO, params, handler);
+                                restClient.postJsonCall(view.getContext(),SmartHomeUtils.DEVICE_INFO,new Gson().toJson(device),handler);
                             }
                         } catch (Exception ex) {
                             Log.e("ConfigurationFragement", "TypeCasting", ex);
@@ -178,11 +179,13 @@ public class ConfigrationFragment extends Fragment {
     AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            smartService.addViewDevice(device);
-            viewDevices.add(device);
-            devicesViewAdapter.notifyDataSetChanged();
-            progressDialog.dismiss();
-            dialog.dismiss();
+            if(!viewDevices.contains(device)) {
+                smartService.addViewDevice(device);
+                viewDevices.add(device);
+                devicesViewAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+                dialog.dismiss();
+            }
 
         }
 

@@ -12,11 +12,15 @@ public class SmartHomeUtils {
 
     private static final String TAG = "SmartHomeUtils";
     /*Rest Api's*/
-    public static String URL_VERIFY = "/verify";
+    public static String URL_VERIFY = "/devicestatus";
     public static String DEVICE_INFO = "/deviceinfo";
     public static String MANUAL_CONFIG = "/manualconfig";
     public static String SYNC_TIME = "/synctime";
     public static String CREATE_SCHEDULER = "/schedulerconfig";
+    public static String WIFI_CONFIG="/wificonfig";
+    public static String WIFI_EXIST_CONFIG="/wifistatus";
+    public static String REMOVE_DEVICE="/remove";
+    public static String PINMODE_STATUS="/pinmodestatus";
     /*fixed bundle arguments*/
     public static final String ARG_INDEX = "index";
     public static final String CHART_SET = "UTF-8";

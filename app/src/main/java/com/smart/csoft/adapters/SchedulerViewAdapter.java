@@ -64,9 +64,9 @@ public class SchedulerViewAdapter extends RecyclerView.Adapter<SchedulerViewAdap
                     scheduler.setIsRunning(0);
                 }
                 String request = gson.toJson(scheduler);
-                RequestParams params = new RequestParams();
-                params.put("scheduler", request);
-                restClient.getCall(SmartHomeUtils.CREATE_SCHEDULER, params, new AsyncHttpResponseHandler() {
+                //RequestParams params = new RequestParams();
+                //params.put("scheduler", request);
+                restClient.postJsonCall(context,SmartHomeUtils.CREATE_SCHEDULER,request, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         scheduler.setStatus(isFlag ? 1 : 0);
